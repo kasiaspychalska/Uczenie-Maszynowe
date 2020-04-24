@@ -1,0 +1,11 @@
+import pandas as pd
+df = pd.read_csv("train.tsv", delimiter='\t',
+                 names=["Cost", "NumberOfRooms", "Area", "Floor", "Address", "Description"])
+# Print one selected column using its index
+print(df.iloc[:, 2])
+# Print two selected columns using their names
+print(df[['Area', 'Address']])
+# Print all columns from file without cut content
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_colwidth', -1)
+print(df)
