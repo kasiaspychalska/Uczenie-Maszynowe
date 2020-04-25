@@ -1,7 +1,5 @@
 import pandas as pd
-import csv
 df = pd.read_csv("train.tsv", delimiter='\t',
                  names=["Cost", "NumberOfRooms", "Area", "Floor", "Address", "Description"])
 with open('out0.csv', 'w') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow([df.Cost.mean().round(0)])
+    csvfile.write(str(df.Cost.mean().round(0)))
