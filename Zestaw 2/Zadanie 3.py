@@ -14,12 +14,8 @@ df['YearsCode'] = df['YearsCode'].astype("float64")
 df['Age1stCode'] = df['Age1stCode'].astype('float64')
 print(df.corr(method='pearson'))
 
-df = df.loc[(df['Age1stCode'] >= np.quantile(df.Age1stCode, 0.25) - stdev(df.Age1stCode)) & (df['Age1stCode'] <= np.quantile(df.Age1stCode, 0.75) + stdev(df.Age1stCode))]
+Q1 = df.quantile(0.25)
+Q3 = df.quantile(0.75)
+IQR = Q3 - Q1
+df = df[~((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))).any(axis=1)]
 print(df.corr(method='pearson'))
-df = df.loc[(df['Age'] >= np.quantile(df.Age, 0.25) - stdev(df.Age)) & (df['Age'] <= np.quantile(df.Age, 0.75) + stdev(df.Age))]
-print(df.corr(method='pearson'))
-
-# Usuwając wartości poniżej 1 kwartyla i powyżej 3 (uwzględniając odchylenie standardowe)
-# wzmacniamy korelację między kolumnami YearsCode i Age1stCode kosztem małego osłabienia korelacji między kolumnami YearsCode i Age.
-# W przypadku usunięcia odchyleń tylko dla kolumny Age1stCode wzmocnilibyśmy korelację między kolumnami YearsCode i Age
-# ale tylko nieznacznie zostałaby wzmocniona korelacja między drugimi zmiennymi.
