@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
 # input data
 df_names = ['Occupancy', 'Date', 'Temperature', 'Humidity',
@@ -29,6 +30,14 @@ y_true = df_results['y']
 y_test_pred = clf.predict(X_test)
 clf_test_accuracy = accuracy_score(y_true, y_test_pred)
 print('Accuracy on test dataset (full model): ' + str(clf_test_accuracy))
+
+conf_matrix = confusion_matrix(y_train, y_train_pred)
+tn, fp, fn, tp = conf_matrix.ravel()
+print(tn, fp, fn, tp)
+sensitivity1 = conf_matrix[0, 0]/(conf_matrix[0, 0]+conf_matrix[0, 1])
+print('Sensitivity : ', sensitivity1)
+specificity1 = conf_matrix[1, 1]/(conf_matrix[1, 0]+conf_matrix[1, 1])
+print('Specificity : ', specificity1)
 
 df = pd.DataFrame(y_test_pred)
 df.to_csv('out.tsv', index=False, header=False)
