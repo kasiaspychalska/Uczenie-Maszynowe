@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 df = pd.read_csv("survey_results_public.csv", header=0)
 df = df.dropna()
@@ -15,8 +17,8 @@ df.corr()
 
 # logistic regression classifier on one independent variable
 clf = LogisticRegression()
-X_train = df[['YearsCode']]
-y_train = df[['under_30']]
+X_train, X_test, y_train, y_test = train_test_split(df[['YearsCode']], df[['under_30']],
+                                                    test_size=0.33, random_state=42)
 clf.fit(X_train, y_train)
 y_train_pred = clf.predict(X_train)
 y_train = y_train['under_30'].to_numpy()
@@ -31,3 +33,5 @@ sensitivity1 = conf_matrix[0, 0]/(conf_matrix[0, 0]+conf_matrix[0, 1])
 print('Sensitivity : ', sensitivity1)
 specificity1 = conf_matrix[1, 1]/(conf_matrix[1, 0]+conf_matrix[1, 1])
 print('Specificity : ', specificity1)
+print("Residual sum of squares: %.2f"
+      % mean_squared_error(y_test, clf.predict(X_test)))
