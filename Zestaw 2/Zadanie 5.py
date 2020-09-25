@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("survey_results_public.csv", header=0,
                  usecols=['YearsCode', 'Age', 'Age1stCode'])
@@ -19,12 +20,10 @@ df = df[~((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))).any(axis=1)]
 df.describe()
 
 # Dzielenie danych na zbiór treningowy i testowy
-X1_train = df[['Age']].head(len(df.index)-round(len(df.index)*0.1))
-X1_test = df[['Age']].tail(round(len(df.index)*0.1))
-Y_train = df['YearsCode'].head(len(df.index)-round(len(df.index)*0.1))
-Y_test = df['YearsCode'].tail(round(len(df.index)*0.1))
-X1_X2_train = df[['Age', 'Age1stCode']].head(len(df.index)-round(len(df.index)*0.1))
-X1_X2_test = df[['Age', 'Age1stCode']].tail(round(len(df.index)*0.1))
+X1_train, X1_test, Y_train, Y_test = train_test_split(df[['Age']], df[['YearsCode']],
+                                                      test_size=0.33, random_state=42)
+X1_X2_train, X1_X2_test, Y_train, Y_test = train_test_split(df[['Age', 'Age1stCode']], df[['YearsCode']],
+                                                            test_size=0.33, random_state=42)
 
 regr1 = linear_model.LinearRegression()
 regr1.fit(X1_train, Y_train)
